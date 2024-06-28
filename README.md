@@ -70,6 +70,8 @@ When this option saves, you should be given a Object (principal) ID, you must sa
 
 ![image](https://github.com/cammurray/ASTSync/assets/26195772/fa130b73-db26-4cbf-b97c-8205ccf9cde7)
 
+
+
 For the next steps, you will need PowerShell. Due to AzureAD module compatability, this cannot be ran from a Mac or an ARM processor. Needs to be run on Windows/x86.
 
 The following script will find the Function App Security Principal, and grant it AttackSimulation.Read.All and User.Read.All scopes to Microsoft Graph.
@@ -95,6 +97,14 @@ New-AzureAdServiceAppRoleAssignment -ObjectId $MSI.ObjectId -PrincipalId $MSI.Ob
 $AppRole = $GraphServicePrincipal.AppRoles | Where-Object {$_.Value -eq "User.Read.All" -and $_.AllowedMemberTypes -contains "Application"}
 New-AzureAdServiceAppRoleAssignment -ObjectId $MSI.ObjectId -PrincipalId $MSI.ObjectId -ResourceId $GraphServicePrincipal.ObjectId -Id $AppRole.Id
 ```
+
+Finally function app needs access to the storage table to create tables and add the data
+Open the storage account resource
+Open Access control (IAM)
+Choose "Storage Table Data Contributor" as Role
+As Member select your managed identity of the function app
+Review + create
+Done
 
 #### (Option 2) Not Recommended - Azure AD Application (COMING SOON).
 
